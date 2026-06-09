@@ -65,10 +65,22 @@ Commodore binaries.
   (which is in the root of the SD card).
 
 
+## Electronics
+
+UI features
+  - OLED
+  - Power LED
+  - Activity LED
+  - Five user buttons
+  - Buzzer with mute button
+  - Reset button
+
+
 ## Links
 
 - The official [documentation](https://cbm-pi1541.firebaseapp.com/) by Steve White.
-- The GitHub [repo](https://github.com/pi1541/Pi1541) from Steve White.
+- The GitHub [repo](https://github.com/pi1541/Pi1541) from Steve White, 
+  or my [fork](https://github.com/maarten-pennings/Pi1541)
 - Older versions of [pi1541](https://cbm-pi1541.firebaseapp.com/whatsnew.html#oldversions.:~:text=the%20wrong%20folder.-,Old%20Versions,-.).
 - A Pi1541 [manual](https://www.combitronics.nl/download/pi1541%20Manual.pdf) by Michael Long.
 - For commands (like `cd`) see the GitHub
