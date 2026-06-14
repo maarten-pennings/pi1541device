@@ -79,9 +79,10 @@ UI features
 ## Links
 
 - The official [documentation](https://cbm-pi1541.firebaseapp.com/) by Steve White.
-- The GitHub [repo](https://github.com/pi1541/Pi1541) from Steve White, 
-  or my [fork](https://github.com/maarten-pennings/Pi1541)
-- Older versions of [pi1541](https://cbm-pi1541.firebaseapp.com/whatsnew.html#oldversions.:~:text=the%20wrong%20folder.-,Old%20Versions,-.).
+- The GitHub [repo](https://github.com/pi1541/Pi1541) with the fimrware from Steve White, 
+  or my [fork](https://github.com/maarten-pennings/Pi1541).
+- Older versions of [pi1541](https://cbm-pi1541.firebaseapp.com/whatsnew.html#oldversions.:~:text=the%20wrong%20folder.-,Old%20Versions,-.) firmware,
+  or my [newer](https://github.com/maarten-pennings/Pi1541/releases).
 - A Pi1541 [manual](https://www.combitronics.nl/download/pi1541%20Manual.pdf) by Michael Long.
 - For commands (like `cd`) see the GitHub
   [repo](https://github.com/pi1541/Pi1541/blob/master/docs/IEC%20Commands.md) or
