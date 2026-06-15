@@ -64,7 +64,9 @@ We get the real firmware from [Pi1541.zip](https://cbm-pi1541.firebaseapp.com/Pi
 
 ### Step 6, 7, 8
 
-Commodore binaries.
+Commodore binaries, e.g. from Zimmers [drive roms](https://www.zimmers.net/anonftp/pub/cbm/firmware/drives/new/1541/index.html) 
+or [C64 roms](https://zimmers.net/anonftp/pub/cbm/firmware/computers/c64/index.html) or own your 
+own PC if you have [VICE](https://vice-emu.sourceforge.io/) installed.
 
 - `dos1541.bin` firmware of the original Commodore 1541 disk drive.
 - `dos1581.bin`  firmware of the original Commodore 1581 disk drive. I skipped this one.
