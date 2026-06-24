@@ -5,11 +5,11 @@ My take on the Pi1541, the cycle exact Commodore 1541 disk drive emulator that r
 
 ## Introduction
 
-For the Commodore 64 (C64), the Commodore 1541 5.25-inch floppy 
-disk drive or its successors are the go-to solution for file storage.
-Over the decades the drives and floppy disks degraded, and various 
-disk drive emulators where developed. 
-One of them is the Pi1514 the topic of this repo.
+The _Commodore 1541_ is a 5.25-inch floppy disk drive.
+It was the solution for file storage when working with Commodore 64 (C64). 
+Over the decades the drives and floppy disks degraded.
+Various disk drive replacements where developed. 
+One of them is the _Pi1514_, the topic of this repo.
 
 An important predecessors of the Pi1541 was the 
 [SD2IEC](https://www.c64-wiki.com/wiki/SD2IEC). The SD2IEC 
@@ -24,36 +24,38 @@ to access files on an SD card.
 
 The SD2IEC is low-cost and capable to store about 25000 floppies
 (of 170 kByte each) on a 4GB SD card. It is small and can be powered 
-by the C64 itself (usually via the USR port). 
+by the C64 itself (usually via the user port). 
 The big drawback is that the SD2IEC is compatible
-only on file level commands (`LOAD`, `SAVE`). Unfortunately,
-due to the low-speed of the 1541, many commercial games, demos, and 
-developer cartridges come with their own fastloaders. Part of a fastloader 
+only on file level commands (`LOAD`, `SAVE`). 
+
+Unfortunately, due to the low-speed of the 1541, many commercial games, demos, 
+and developer cartridges come with their own fastloaders. Part of a fastloader 
 is software that is uploaded to the 1541 drive (which is a 6502 based 
-computer of its own). The SD2IEC can not run that code.
+computer on its own). The SD2IEC can not run that code.
 This results in low software compatibility: a large portion of the C64 
-applications (games) will not load on an SD2IEC.
+applications (games) will not load from an SD2IEC.
+
+The Pi1541, developed by Steve White, solved this. Instead of the 
+ATmega644, it uses a Raspberry Pi and a small add-on ("HAT"). The Pi is 
+powerful enough to provide a cycle-exact hardware emulation of the real 
+Commodore 1541 drive. It emulates the drive's internal 6502 CPU, the RAM, 
+and the VIA chips down to the exact clock cycle. You even need to download the 
+original Commodore ROM image of the 1541 to "program" this virtual 6502.
 
 > ![SD2IEC](images/pcbway-pi1541.jpg)
 >
 > _Example Pi1541 project from [PCBWAY](https://www.pcbway.com/project/shareproject/Pi1541_IO_Adapter__Rev_2.html)_
 
-
-The Pi1541, developed by Steve White, improved on this. Instead of the 
-ATmega644, it uses a Raspberry Pi and a small add-on ("HAT"), which is 
-powerful enough to provide a cycle-exact hardware emulation of the real 
-Commodore 1541 drive. It emulates the drive's internal 6502 CPU, the RAM, 
-and the VIA chips down to the exact clock cycle. You even need to download the 
-original Commodore ROM image of the 1514 to "program" this virtual 6502.
-
 This solution provides near 100% compatibility because it behaves exactly 
-like a real drive. It supports complex copy protections and almost every 
-custom fastloader ever written (e.g., JiffyDOS, Final Cartridge III).
+like the original drive. It supports complex copy protections and almost every 
+fastloader ever written (e.g., JiffyDOS, Final Cartridge III).
+
 Steve White wrote a "bare metal" application on the Pi. This means his 
 emulator does not run under Raspberry Pi OS (Linux) but directly on the 
-Broadcom BCM2837B0. This means fast booting, and carefree switching off the 
-power. It is more expensive than the SD2IEC due to the Raspberry Pi board, 
-a bit bigger, and needs (more) external power
+Broadcom BCM2837B0. This results in fast booting, and carefree switching off 
+the power. The Pi1541 is more expensive than the SD2IEC due to the 
+Raspberry Pi board, it is a bit bigger, and needs (more) external power.
+But most believe these downsides are well compensated by the extra compatibility.
 
 
 ## Setup SD card
