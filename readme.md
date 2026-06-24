@@ -29,14 +29,15 @@ to access files on an SD card.
 The SD2IEC is low-cost and capable to store about 25000 floppies
 (of 170 kByte each) on a 4GB SD card. It is small and can be powered 
 by the C64 itself (usually via the user port). 
-The big drawback is that the SD2IEC is compatible
-only on file level commands (`LOAD`, `SAVE`, `OPEN`, `INPUT#`). 
-It cannot handle all `PRINT#`s to secondairy channel 15.
+The big drawback is that while the SD2IEC is compatible
+with the _file level commands_, it cannot handle the _programming commands_ 
+given via the secondairy channel 15.
 
 Unfortunately, due to the low-speed of the 1541, many commercial games, demos, 
 and developer cartridges come with their own fastloaders. Part of a fastloader 
 is software that is uploaded to the 1541 drive (which is a 6502 based 
-computer on its own). The SD2IEC cannot run that code.
+computer on its own) via the above mentioned programming commands. 
+The SD2IEC cannot run that uploaded software.
 This results in low software compatibility: a large portion of the C64 
 applications (games) will not load from an SD2IEC.
 
@@ -61,6 +62,150 @@ Broadcom BCM2837B0. This results in fast booting, and carefree switching off
 the power. On the down side, the Pi1541 is more expensive than the SD2IEC due to the 
 Raspberry Pi board; it is a bit bigger physically; and needs (more) external power.
 But most believe these down sides are well compensated by the extra compatibility.
+
+
+## Concepts
+
+This section explains the key concepts: current working directory, 
+three categories of commands, the new `CD` command, mounting `.64` as
+virtual floppy, the problem with the "programmers commands", and finally 
+_browse mode_ and _emulation mode_.
+
+
+### Current working directory
+
+The Pi1541 contains an SD card, and it maintains a notion of the 
+_current working directory_ on that SD card. Its firmware bridges the 
+commands that come from the C64 (over the IEC bus) to the FAT file system 
+on the SD card. It does understand the "high level command" such as 
+`SAVE "MYGAME"`, `LOAD "MYGAME"`, and even `LOAD "$"` to read the 
+(current working) directory. The `SAVE "MYGAME"` creates a file `MYGAME` 
+on the SD card, in the current working directory. Similarly `LOAD "MYGAME"` 
+reads the file `MYGAME` from the current working directory and sends it back 
+to the C64 over the IEC bus. It will be no surprise that `LOAD "$"` reads 
+the current working directory and sends that back to the C64.
+
+
+### Commands 
+
+If you are more than a casual user of the C64 and the 1541 drive, 
+you will know that next to those "high level commands" there are more 
+"advanced commands" that a 1541 will understand (eg see 
+[c64-wiki](https://www.c64-wiki.com/wiki/Commodore_1541#Disk_Drive_Commands)). 
+The Pi1541 also emulates those. For example `OPEN 1,8,15,"S0:MYGAME":CLOSE 1` 
+scratches (deletes) the file `MYGAME` from the current working directory, 
+and `OPEN 1,8,15,"R0:YOURGAME=MYGAME":CLOSE 1` renames `MYGAME` to `YOURGAME`.
+
+
+### CD 
+
+You might be wondering how to _change_ the current working directory. 
+The developers of the SD2IEC added an advanced command: `CD`. For example 
+`OPEN 1,8,15,"CD:SUBDIR":CLOSE 1` changes the current working directory 
+to subdirectory `SUBDIR` assuming that directory exists in the current 
+working directory. The command `OPEN 1,8,15,"CD:←":CLOSE 1` (the `←` being 
+the key in the upper left corner on the C64 keyboard) moves back to the 
+parent directory. No idea why they did not pick the standard `..` instead 
+of the rather obscure `←`. Next to `CD`, related "advanced commands" were 
+added: `MD` to make a directory and `RD` to remove an (empty) directory.
+
+Of course the C64 doesn't know about the `CD` command, but you as operator 
+can issue them and the new directory feels like a new disk to the C64. 
+Typically the SD2IEC and the Pi1541 also come with a file browser `FB64`. 
+This browser does know the `CD` command and allows easy navigation through 
+the file system on the SD card.
+
+
+### Mounting a virtual floppy 
+
+There is one more important concept. In the C64 retro community, floppy disks are ripped 
+to a single file. They have the extension `.d64` and are useable as virtual disk in tools 
+like VICE, The C64 ultimate, and also the SD2IEC and Pi1541. SD2IEC and Pi1541 treat 
+`.d64` files a bit like Windows treats `.zip` files. It is one _file_, but you can `CD` 
+into it, and that "unzipped" `.64` file is then the "mounted" _directory_. All 
+"high level commands" (`LOAD`) work on the mounted floppy, and so do all 
+"advanced commands" (`S0:MYGAME`). Even `OPEN 1,8,15,"CD:←":CLOSE 1` works;
+it unmountes the `.64` virtual floppy and switches to its containing directory.
+Of course `OPEN 1,8,15,"CD:SUBDIR":CLOSE 1` does not work in the mounted `.64` because
+`.d64` files are supposed to be ripped 1541 disks, and the 1541 did not have a notion 
+of subdirectories.
+
+
+### Programmer's commands 
+
+We should realize that the firmware (of SD2IEC and Pi1541) sees the high 
+level and advanced commands come in via the IEC bus. They need to parse and 
+understand them and execute them. That is the task for the software written 
+by the programmers of those two devices. That is development work.
+
+Unfortunately, next to the high level and advanced commands there is a third 
+category, the "programmer's commands". Chapter 8 of the 1541 
+[user manual](https://www.zimmers.net/anonftp/pub/cbm/manuals/drives/1541_Users_Guide.pdf) 
+introduces these with the test "The expert programmer can actually design routines 
+that reside and operate on the disk controller." This is with commands such as `M-W` 
+(memory write), `M-R` (memory read), and `M-E` (memory execute). Here is 
+an example from the manual (recall that `RTS` has opcode 0x60 or 96 decimal).
+
+![memory execute example](images/m-e-command.png)
+
+So far SD2IEC and Pi1541 are very similar. Now we come to an important difference.
+The SD2IEC does not implement these programmer's commands, but Pi1541 does.
+In a clever way.
+
+
+### Browse mode versus emulation mode
+
+The Pi1541 has two modes. The developer, Steve White, calls them _browse mode_ and
+_emulation mode_. We could say that the SD2IEC only supports browse mode, and Pi1541 
+supports both. When the Pi1541 starts, it is in browse mode. In browse mode, the 
+firmware from Steve runs. This firmware implements the high level and advanced 
+commands _including the `CD` command_. This allows all existing tools to 
+browse all files on the SD card. As soon as a command comes in that `CD`s into 
+a virtual floppy disk (I called this "mounting the floppy" above), the Pi1541 
+switches to emulation mode. In emulation mode the Raspberry Pi _emulates the 1541_.
+
+You have to understand that the emulation is serious. A real 1541 contains a 6502,
+RAM, ROM, and VIAs. The Pi1541 emulates all of those, to the cycle. What code does 
+the emulated 6502 run? The original 1541 ROM from Commodore that you have to download 
+and put on the SD card - Steve can't do that due to licensing reasons. This means that 
+all `M-W` and `M-E` commands are working, they are part of that 1541 rom. And 
+software that is uploaded and executed this way by the fastloaders also just works, 
+it doesn't know the 1541 is emulated.
+
+An `OPEN 1,8,15,"CD:←":CLOSE 1` is intercepted, unmounts the `.d64`, sets 
+the working directory to the parent, and switches back to browse mode.
+
+It is important for a user to know these two modes, and to know which one is 
+running when. For example, the advanced command `OPEN 1,8,15,"N0:DISKNAME,DN":CLOSE 1`
+(recall `N` stands for `NEW` or rather format) in _browse_ mode just creates a 
+new, empty, formated virtual floppy with the name `DISKNAME.d64`. If you give 
+the same command in emulation mode, the original 1541 firmware kicks in, 
+and it will hapily wipe the entire mounted `.d64` virtual floppy.
+
+
+### My additions
+
+Mostly for fun, I have made two additions to Steve's firmware. The `CD:subdir` command 
+goes one subdirectory down, and `CD:←` goes one up. For some reason the `CD://` did not 
+work. It is supposed to go to the root directory (yes with two slashes, something to 
+do with multiple volumes). I fixed it. Secondly, I was missing a `pwd` command (print 
+working directory). I added a `LOAD "$$"` command that does that. I added both in 
+[v1.27](https://github.com/maarten-pennings/Pi1541#additions-in-this-fork).
+
+
+### Real life operation
+
+You might be wondering how the Pi1541 works in real life. You can use the `FB64`.
+You can also do those `CD` commands combined with `LOAD "$"` by hand. But the 
+Raspberry Pi can also be connected to a full keyboard and HDMI screen. 
+The HDMI screen will always shows the current directory and its contents, 
+also when it is changed with `CD` (or `FB64` doing `CD`s).
+It is also possible to change the current directory with the full keyboard 
+connected to the Raspberrry Pi. But there is a third option. We can connect 
+an OLED and five buttons to the Pi (Next, Prev, Select, Back and one for 
+swap lists). The OLED will also always show the current directory 
+(in sync with the HDMI screen), and the buttons also allow browsing 
+(just like the full keyboard).
 
 
 ## Setup SD card
