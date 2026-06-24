@@ -11,6 +11,10 @@ Over the decades the drives and floppy disks degraded.
 Various disk drive replacements where developed. 
 One of them is the _Pi1514_, the topic of this repo.
 
+> ![C1541](images/c1541.jpg)
+>
+> _Commodore 1514 from [Commodore online museum](https://cbmmuseum.kuto.de/floppy_vc1541.html)_
+
 An important predecessors of the Pi1541 was the 
 [SD2IEC](https://www.c64-wiki.com/wiki/SD2IEC). The SD2IEC 
 contains an ATmega644 microcontroller from the Atmel that 
@@ -42,7 +46,7 @@ Commodore 1541 drive. It emulates the drive's internal 6502 CPU, the RAM,
 and the VIA chips down to the exact clock cycle. You even need to download the 
 original Commodore ROM image of the 1541 to "program" this virtual 6502.
 
-> ![SD2IEC](images/pcbway-pi1541.jpg)
+> ![Pi1541](images/pcbway-pi1541.jpg)
 >
 > _Example Pi1541 project from [PCBWAY](https://www.pcbway.com/project/shareproject/Pi1541_IO_Adapter__Rev_2.html)_
 
