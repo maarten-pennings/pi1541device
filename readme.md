@@ -67,7 +67,7 @@ But most believe these down sides are well compensated by the extra compatibilit
 ## Concepts
 
 This section explains the key concepts: current working directory, 
-three categories of commands, the new `CD` command, mounting `.64` as
+three categories of commands, the new `CD` command, mounting `.d64` as
 virtual floppy, the problem with the programmer's commands, and finally 
 _browse mode_ and _emulation mode_.
 
@@ -131,11 +131,11 @@ like VICE, the C64 Ultimate, and also the SD2IEC and Pi1541.
 
 SD2IEC and Pi1541 treat `.d64` files a bit like 
 Windows treats `.zip` files. It is one _file_, but you can `CD` 
-into it, and that "unzipped" `.64` file is then the "mounted" _directory_. All 
+into it, and that "unzipped" `.d64` file is then the "mounted" _directory_. All 
 high level commands (`LOAD`) work on the mounted floppy, and so do all 
 advanced commands (`S0:MYGAME`). Even `OPEN 1,8,15,"CD:←":CLOSE 1` works;
-it unmounts the `.64` virtual floppy and switches to its containing directory.
-Of course `OPEN 1,8,15,"CD:SUBDIR":CLOSE 1` does not work in the mounted `.64` because
+it unmounts the `.d64` virtual floppy and switches to its containing directory.
+Of course `OPEN 1,8,15,"CD:SUBDIR":CLOSE 1` does not work in the mounted `.d64` because
 `.d64` files are supposed to be ripped 1541 disks, and the 1541 did not have a notion 
 of subdirectories.
 
@@ -159,6 +159,11 @@ an example from the manual (recall that `RTS` has opcode 0x60 or 96 decimal).
 >
 > Example of Programmer's commands from the 
 > [user manual](https://www.zimmers.net/anonftp/pub/cbm/manuals/drives/1541_Users_Guide.pdf)
+
+The above 1-byte "program" is written by the C64 in the memory of the 1541 drive 
+(to addres 0x0301), and then the C64 gives a command to call 0x0301. The 1541 
+starts executing there finds opcode 96 (RTS) and returns and stops executing this 
+program. This is the essence of how fast loaders work.
 
 
 ### Browse mode versus emulation mode
