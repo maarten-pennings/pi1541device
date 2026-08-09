@@ -67,7 +67,7 @@ But most believe these down sides are well compensated by the extra compatibilit
 ## Concepts
 
 This section explains the key concepts: current working directory, 
-three categories of commands, the new `CD` command, mounting `.64` as
+three categories of commands, the new `CD` command, mounting `.d64` as
 virtual floppy, the problem with the programmer's commands, and finally 
 _browse mode_ and _emulation mode_.
 
@@ -131,11 +131,11 @@ like VICE, the C64 Ultimate, and also the SD2IEC and Pi1541.
 
 SD2IEC and Pi1541 treat `.d64` files a bit like 
 Windows treats `.zip` files. It is one _file_, but you can `CD` 
-into it, and that "unzipped" `.64` file is then the "mounted" _directory_. All 
+into it, and that "unzipped" `.d64` file is then the "mounted" _directory_. All 
 high level commands (`LOAD`) work on the mounted floppy, and so do all 
 advanced commands (`S0:MYGAME`). Even `OPEN 1,8,15,"CD:←":CLOSE 1` works;
-it unmounts the `.64` virtual floppy and switches to its containing directory.
-Of course `OPEN 1,8,15,"CD:SUBDIR":CLOSE 1` does not work in the mounted `.64` because
+it unmounts the `.d64` virtual floppy and switches to its containing directory.
+Of course `OPEN 1,8,15,"CD:SUBDIR":CLOSE 1` does not work in the mounted `.d64` because
 `.d64` files are supposed to be ripped 1541 disks, and the 1541 did not have a notion 
 of subdirectories.
 
@@ -157,8 +157,13 @@ an example from the manual (recall that `RTS` has opcode 0x60 or 96 decimal).
 
 > ![memory execute example](images/m-e-command.png)
 >
-> Example of Programmer's commands from the 
+> Example of programmer's commands from the 
 > [user manual](https://www.zimmers.net/anonftp/pub/cbm/manuals/drives/1541_Users_Guide.pdf)
+
+The above 1-byte "program" is written by the C64 in the memory of the 1541 drive 
+(to addres 0x0300), and then the C64 gives a command to call 0x0300. The 1541 
+starts executing there finds opcode 96 (RTS), returns, and stops executing the 
+program. This is the essence of how fast loaders work.
 
 
 ### Browse mode versus emulation mode
@@ -178,8 +183,8 @@ switches to emulation mode. In emulation mode the Raspberry Pi _emulates the 154
 
 The emulation is serious. A real 1541 contains a 6502,
 RAM, ROM, and VIAs. The Pi1541 emulates all of those, to the clock cycle. 
-Timing of pulses on the IEC bus matter to the C64. What code does 
-the emulated 6502 run? The original 1541 ROM from Commodore that you have to download 
+Timing of pulses on the IEC bus matters to the C64. What code does the emulated 
+6502 run? It runs the original 1541 ROM from Commodore that you have to download 
 and put on the SD card - Steve can't do that due to licensing reasons. As a consequence 
 all `M-W` and `M-E` commands are working since they are implemented by that 1541 rom. 
 Software that is uploaded and executed this way, by the fast loaders, also just works; 
@@ -190,8 +195,8 @@ sets the working directory to the parent, and switches back to browse mode.
 
 It is important for a user to know about these two modes, and to know which one is 
 running when. For example, the advanced command `OPEN 1,8,15,"N0:DISKNAME,DN":CLOSE 1`
-(recall `N` stands for `NEW` or rather format) in _browse_ mode just _creates_ a 
-new, empty, formatted virtual floppy with the name `DISKNAME.d64` on the SD card. 
+(recall `N` stands for `NEW` meaning "format") in _browse_ mode just _creates_ a 
+new, empty, formatted virtual floppy image with the name `DISKNAME.d64` on the SD card. 
 If you give the same command in emulation mode, the original 1541 firmware kicks in, 
 and it will hapily wipe (format) the entire mounted `.d64` virtual floppy.
 
@@ -209,13 +214,14 @@ working directory). I added a `LOAD "$$"` command that does that. I added both i
 ### Real life operation
 
 You might be wondering how the Pi1541 works in real life. 
-You can do those `CD` commands combined with `LOAD "$"` by hand,
-or let `FB64` do them for you. 
+You can operate it completely from the C64:
+you can do the `CD` commands combined with `LOAD "$"` by hand,
+or let `FB64` do them for you.
 
 But the Raspberry Pi can also be connected to a full keyboard and HDMI screen. 
-The HDMI screen will always shows the current directory and its contents, 
-also when it is changed with `CD` (or `FB64` doing `CD`s).
-It is even possible to change the current directory with the full keyboard 
+The HDMI screen will always shows the current directory and its contents (files and 
+subdirectories), also when it is changed with `CD` (or `FB64` doing `CD`s).
+It is also possible to change the current directory with the full keyboard 
 connected to the Raspberry Pi. 
 
 There is a third option. We can connect an OLED and five buttons 
@@ -227,7 +233,7 @@ The OLED will also always show the current directory
 Three methods, always in sync.
 
 Oh, and in [v1.25](https://github.com/maarten-pennings/Pi1541#additions-in-this-fork)
-I added support for a bigger (1.54") OLEDs.
+I added support for a bigger (1.54") OLED, making it easier to read from a distance.
 
 
 ## Setup SD card
