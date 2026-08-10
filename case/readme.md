@@ -10,6 +10,10 @@ I used these names: bottom, top, front and foot for the outside parts,
 and OLED-holder, button-extender, standoff11hx6x3, standoff4hx6x2.5 for 
 the inside parts.
 
+![top/front view](render1.jpg)
+
+![bottom/back view](render2.jpg)
+
 
 ## Outside
 
