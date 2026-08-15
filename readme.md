@@ -1,6 +1,6 @@
 # Pi1541
 
-My take on the Pi1541, the cycle exact Commodore 1541 disk drive emulator that runs on a Raspberry Pi.
+My take on the _Pi1541_, the cycle exact Commodore 1541 disk drive emulator that runs on a Raspberry Pi.
 
 
 ## Introduction
@@ -14,6 +14,8 @@ One of them is the _Pi1541_, the topic of this repo.
 > ![C1541](images/c1541.jpg)
 >
 > _Commodore 1541 from [Commodore online museum](https://cbmmuseum.kuto.de/floppy_vc1541.html)_
+> _and later model (1541-ii) from [Wikipedia](https://en.wikipedia.org/wiki/Commodore_1541)_
+
 
 An important predecessors of the Pi1541 was the 
 [SD2IEC](https://www.c64-wiki.com/wiki/SD2IEC). The SD2IEC 
@@ -41,9 +43,9 @@ The SD2IEC cannot run that uploaded software.
 This results in low software compatibility: a large portion of the C64 
 applications (games) will not load from an SD2IEC.
 
-The Pi1541, developed by Steve White, solved this. Instead of the 
-ATmega644, it uses a Raspberry Pi and a small add-on (a so-called "HAT"). The Pi is 
-powerful enough to provide a cycle-exact hardware emulation of the real 
+The Pi1541, developed by Steve White, solves this. Instead of an _ATmega644_ micro 
+controller, it uses a more powerful _Raspberry Pi_ and a simple add-on (a so-called "HAT"). 
+The Pi is powerful enough to provide a cycle-exact hardware emulation of the real 
 Commodore 1541 drive. It emulates the drive's internal 6502 CPU, the RAM, 
 and the VIA chips down to the exact clock cycle. You even need to download the 
 original Commodore ROM image of the 1541 to "program" this virtual 6502.
@@ -58,7 +60,7 @@ fast loader ever written (e.g., JiffyDOS, Final Cartridge III).
 
 Steve White wrote a "bare metal" application on the Pi. This means his 
 emulator does not run under Raspberry Pi OS (Linux) but directly on the 
-Broadcom BCM2837B0. This results in fast booting, and carefree switching off 
+_Broadcom BCM2837B0_. This results in fast booting, and carefree switching off 
 the power. On the down side, the Pi1541 is more expensive than the SD2IEC due to the 
 Raspberry Pi board; it is a bit bigger physically; and needs (more) external power.
 But most believe these down sides are well compensated by the extra compatibility.
@@ -66,15 +68,15 @@ But most believe these down sides are well compensated by the extra compatibilit
 
 ## Concepts
 
-This section explains the key concepts: current working directory, 
-three categories of commands, the new `CD` command, mounting `.d64` as
-virtual floppy, the problem with the programmer's commands, and finally 
-_browse mode_ and _emulation mode_.
+This section explains the key concepts when working with the Pi1541: 
+current working directory, three categories of commands, the new `CD` command, 
+mounting `.d64` as virtual floppy, the problem with the programming commands, 
+and finally _browse mode_ and _emulation mode_.
 
 
 ### Current working directory
 
-The Pi1541 contains an SD card, and it maintains a notion of the 
+The Pi1541 contains a SD card, and it maintains a notion of the 
 _current working directory_ on that SD card. Its firmware bridges the 
 commands that come from the C64 (over the IEC bus) to the FAT file system 
 on the SD card. 
@@ -98,9 +100,10 @@ scratches (deletes) the file `MYGAME` from the current working directory,
 and `OPEN 1,8,15,"R0:YOURGAME=MYGAME":CLOSE 1` renames `MYGAME` to `YOURGAME`.
 
 Recall that the DOS (disk operating system) was not part of the C64 
-(would have taken to much memory), rather it was baked into the 1541 itself.
+(would have taken too much memory), rather it was baked into the 1541 itself.
 What is part of the C64, is setting up a "data pipe" (open a file) and send 
-the (textual) command over that pipe. That is the reason we have advanced commands 
+the (textual) command over that pipe. The 1541 receives the textual command,
+parses it and executes it. That is the reason we have advanced commands 
 (eg see [c64-wiki](https://www.c64-wiki.com/wiki/Commodore_1541#Disk_Drive_Commands)).
 
 
@@ -109,7 +112,7 @@ the (textual) command over that pipe. That is the reason we have advanced comman
 You might be wondering how to _change_ the current working directory. 
 The developers of the SD2IEC added an advanced command: `CD`. For example 
 `OPEN 1,8,15,"CD:SUBDIR":CLOSE 1` changes the current working directory 
-to subdirectory `SUBDIR` assuming that directory exists in the current 
+to subdirectory `SUBDIR` assuming that subdirectory exists in the current 
 working directory. The command `OPEN 1,8,15,"CD:←":CLOSE 1` (the `←` being 
 the key in the upper left corner on the C64 keyboard) moves back to the 
 parent directory. No idea why they did not pick the standard `..` instead 
@@ -140,7 +143,7 @@ Of course `OPEN 1,8,15,"CD:SUBDIR":CLOSE 1` does not work in the mounted `.d64` 
 of subdirectories.
 
 
-### Programmer's commands 
+### Programming commands 
 
 We should realize that the firmware (of SD2IEC and Pi1541) sees the high 
 level and advanced commands come in via the IEC bus. They need to parse and 
@@ -148,7 +151,7 @@ understand them, and then execute them. That is the task for the software writte
 by the programmers of those two devices. That is development work.
 
 Unfortunately, next to the high level and advanced commands there is a third 
-category, the _programmer's commands_. Chapter 8 of the 1541 
+category, the _programming commands_. Chapter 8 of the 1541 
 [user manual](https://www.zimmers.net/anonftp/pub/cbm/manuals/drives/1541_Users_Guide.pdf) 
 introduces these with the text "The expert programmer can actually design routines 
 that reside and operate on the disk controller". This is with commands such as `M-W` 
@@ -157,19 +160,21 @@ an example from the manual (recall that `RTS` has opcode 0x60 or 96 decimal).
 
 > ![memory execute example](images/m-e-command.png)
 >
-> Example of programmer's commands from the 
+> Example of programming commands from the 
 > [user manual](https://www.zimmers.net/anonftp/pub/cbm/manuals/drives/1541_Users_Guide.pdf)
 
 The above 1-byte "program" is written by the C64 in the memory of the 1541 drive 
 (to addres 0x0300), and then the C64 gives a command to call 0x0300. The 1541 
-starts executing there finds opcode 96 (RTS), returns, and stops executing the 
-program. This is the essence of how fast loaders work.
+starts executing there, finds opcode 96 (RTS), returns, and stops executing the 
+program. I made a more elaborate example 
+[blinky1541](https://github.com/maarten-pennings/C64howto/tree/main/blinky1541).
+Anyhow, this 1541 feature is the essence of how fast loaders work.
 
 
 ### Browse mode versus emulation mode
 
 So far SD2IEC and Pi1541 are very similar. Now we come to an important difference.
-The SD2IEC does _not_ implement the programmer's commands, but Pi1541 _does_.
+The SD2IEC does _not_ implement the programming commands, but Pi1541 _does_.
 In a clever way.
 
 The Pi1541 has two modes. The developer, Steve White, calls them _browse mode_ and
@@ -191,14 +196,21 @@ Software that is uploaded and executed this way, by the fast loaders, also just 
 it doesn't know the 1541 is emulated.
 
 In emulation mode, an `OPEN 1,8,15,"CD:←":CLOSE 1` is intercepted, unmounts the `.d64`, 
-sets the working directory to the parent, and switches back to browse mode.
+sets the working directory to the parent, and switches back to browse mode. 
 
 It is important for a user to know about these two modes, and to know which one is 
 running when. For example, the advanced command `OPEN 1,8,15,"N0:DISKNAME,DN":CLOSE 1`
 (recall `N` stands for `NEW` meaning "format") in _browse_ mode just _creates_ a 
 new, empty, formatted virtual floppy image with the name `DISKNAME.d64` on the SD card. 
 If you give the same command in emulation mode, the original 1541 firmware kicks in, 
-and it will hapily wipe (format) the entire mounted `.d64` virtual floppy.
+and it will happily wipe (format) the entire mounted `.d64` virtual floppy.
+
+> There is another, arguably more important, caveat to be aware of. 
+> Writes to a d64 image (e.g. `SAVE "PYPROG"`) in emulation mode are not 
+> written-through to SD card. All updates are in the Pi's RAM. 
+> You _must unmount_ the virtual floppy (with `"CD:←"` or by pressing 
+> the ESC key on the Pi1514). Only then the new content is written to 
+> the FAT file system on the SD card.
 
 
 ### My additions
@@ -207,115 +219,70 @@ Mostly for fun, I have made a couple of additions to Steve's firmware. The `CD:s
 goes one subdirectory down, and `CD:←` goes one up. For some reason the `CD://` did not 
 work. It is supposed to go to the root directory (yes with two slashes, something to 
 do with multiple volumes). I fixed it. Secondly, I was missing a `pwd` command (print 
-working directory). I added a `LOAD "$$"` command that does that. I added both in 
+working directory). I added a `LOAD "$$"` command (I call it "sysinfo" that does that. 
+I added both features in 
 [v1.27](https://github.com/maarten-pennings/Pi1541#additions-in-this-fork).
 
 
-### Real life operation
+## Real life operation
 
 You might be wondering how the Pi1541 works in real life. 
-You can operate it completely from the C64:
+
+You can operate the device completely from the C64:
 you can do the `CD` commands combined with `LOAD "$"` by hand,
 or let `FB64` do them for you.
 
 But the Raspberry Pi can also be connected to a full keyboard and HDMI screen. 
-The HDMI screen will always shows the current directory and its contents (files and 
+The HDMI screen will always show the current directory and its contents (files and 
 subdirectories), also when it is changed with `CD` (or `FB64` doing `CD`s).
-It is also possible to change the current directory with the full keyboard 
-connected to the Raspberry Pi. 
+It is also possible to change the current directory with a keyboard 
+connected to the Raspberry Pi (via USB). 
 
 There is a third option. We can connect an OLED and five buttons 
-(Next, Prev, Select, Back and one for swap lists) to the Pi. 
+(Next, Prev, Select, Esc and Ins) to the Pi. 
 The OLED will also always show the current directory 
 (in sync with the HDMI screen), and the buttons also allow browsing 
-(just like the full keyboard).
+(just like the USB keyboard).
 
 Three methods, always in sync.
 
 Oh, and in [v1.25](https://github.com/maarten-pennings/Pi1541#additions-in-this-fork)
 I added support for a bigger (1.54") OLED, making it easier to read from a distance.
 
+This table shows the functions of the five buttons. 
+The swaplist is there to support large programs that use multiple floppies 
+that need to be swapped during the run-time of the program.
+When holding the INS key for a longer time, it acts as a shift key for the 
+other four. It changes the device number as shown in the "Drive" column.
 
-## Setup SD card
-
-### Step 1
-
-Format SD card to FAT32
-
-### Steps 2, 3, 4
-
-It seems that on a Raspberry Pi (up to version 3), the GPU takes care of the boot process.
-When the Raspberry Pi powers on, the bootloader burned directly into the hardware (ROM) wakes up. 
-It only knows how to look for a file named `bootcode.bin` on an SD card with FAT16 or FAT32.
-We get boot files from [raspberrypi's GitHub](https://github.com/raspberrypi/firmware).
-
-- The Bootloader `bootcode.bin` (50 kbyte). 
-  This is the first code the Raspberry Pi’s GPU reads from the SD card (into the GPU's cache).
-  It initializes the memory and prepares the system to load the GPU firmware.
-
-- The GPU firmware `start.elf` (3 Mbyte) is the "operating system" for the GPU. 
-  It reads `config.txt`, sets up the clocks, configures the display/HDMI, splits the RAM between the GPU and the CPU. 
-  Finally, it loads your bare-metal binary `kernel.img` into RAM, and releases the ARM CPU from reset so it starts executing code.
-
-- The memory map `fixup.dat` (7 kbyte) is a companion to `start.elf`.
-  It contains configuration data partitioning the RAM between the GPU and the CPU, read by `start.elf`.
+| Button | Description | Browse mode                  | Emulation mode       |Drive |
+|:-------|:------------|:-----------------------------|:---------------------|:----:|
+| SEL    | Select      | Change to sub dir (or mount) | -                    |    8 |
+| PRV    | Previous    | Select previous dir          | Previous in swaplist |    9 |
+| NXT    | Next        | Select next dir              | Next in swaplist     |   10 |
+| ESC    | Escape      | Change to parent dir         | Unmount              |   11 |
+| INS    | Insert      | Insert .d64 file in swaplist | -                    | shift|
 
 
-### Step 5
+## Hardware
 
-We get the real firmware from [Pi1541.zip](https://cbm-pi1541.firebaseapp.com/Pi1541.zip).
-
-- The firmware `kernel.img` (500 kbyte).
-  In the Raspberry Pi, the filename `kernel.img` is the default name the GPU (`start.elf`) 
-  looks for to start the main processor (ARM CPU). It usually points to the Linux kernel but it can 
-  be any compiled binary. The _Pi1541_ is a bare metal firmware. This means that the code runs
-  directly on the hardware without an underlying operating system (no scheduler, no file system).
-
-  I did not takes latest greatest, which was 1.24, but 1.23, because I want the activity LED
-  and that seems [broken](https://github.com/pi1541/Pi1541/issues/206#issuecomment-1162708867)
-  in V1.24. Find older versions at the bottom of this [page](https://cbm-pi1541.firebaseapp.com/whatsnew.html#oldversions.:~:text=the%20wrong%20folder.-,Old%20Versions,-.).
-
-- Configuration `config.txt` (41 byte) is read by `start.elf` (the GPU firmware), not `kernel.img`.
-  It contains two lines.
-  - `kernel_address=0x1f00000`  
-    By default, the Raspberry Pi loads the kernel at address 0x8000 but the Pi1541 code is compiled for another address.
-  - `force_turbo=1`  
-    By default the Raspberry Pi clocks its CPU down when it is idle (dynamic frequency scaling). 
-    This locks the CPU at its maximum rated speed constantly.
-    The 1541 disk drive is a "real-time" device, it communicates with the C64 using fixed pulse widths.
-    If the Pi would clock down, the pulse timings will shift, leading to communication errors.
-
-- User options `options.txt` (6 kbyte) is written specifically for the Pi1541 
-  emulator (which buttons, OLED type, how many IEC connectors, etc).
-
-- The directory `1541` is supposed to be the root directory for the "disks" served by the firmware.
-  It contains (will later contain) disk images (`.d64`) files, but it may also contain `PRG` files, 
-  i.e. C64 (or VIC-20, or ...) binaries that the Pi1541 will also serve as a disk image 
-  (with just that file). The initial contents of this directory is a file browser per supported 
-  Commodore platform, like `fb64` for the Commodore 64.
+See directory [PCB](pcb).
 
 
-### Step 6, 7, 8
+## Software
 
-Commodore binaries, e.g. from Zimmers [drive roms](https://www.zimmers.net/anonftp/pub/cbm/firmware/drives/new/1541/index.html) 
-or [C64 roms](https://zimmers.net/anonftp/pub/cbm/firmware/computers/c64/index.html) or own your 
-own PC if you have [VICE](https://vice-emu.sourceforge.io/) installed.
-
-- `dos1541.bin` firmware of the original Commodore 1541 disk drive.
-- `dos1581.bin`  firmware of the original Commodore 1581 disk drive. I skipped this one.
-- `chargen.bin` optional; font used by emulator on HDMI display.
+See other [repo](https://github.com/maarten-pennings/Pi1541).
 
 
-### Step 9 
+## Case
 
-- `prg` and `d64` files go in (subdirectories) of `1541` directory 
-  (which is in the root of the SD card).
+See directory [case](case).
 
 
 ## Links
 
 - The official [documentation](https://cbm-pi1541.firebaseapp.com/) by Steve White.
-- The GitHub [repo](https://github.com/pi1541/Pi1541) with the fimrware from Steve White, 
+- The GitHub [repo](https://github.com/pi1541/Pi1541) with the firmware from Steve White, 
   or my [fork](https://github.com/maarten-pennings/Pi1541).
 - Older versions of [pi1541](https://cbm-pi1541.firebaseapp.com/whatsnew.html#oldversions.:~:text=the%20wrong%20folder.-,Old%20Versions,-.) firmware,
   or my [newer](https://github.com/maarten-pennings/Pi1541/releases).
