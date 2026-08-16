@@ -377,13 +377,15 @@ and in the foot, the chamfered foot, and of course the front panel.
 I designed at about 60% scale: from 240×180×70 mm³ to 150×105×42 mm³.
 In total there are four exterior parts: top, bottom, foot and front.
 
+For assambly of the PCBs I 3D printed standoffs.
 The Raspberry Pi is attached to my PCB using four M2 
-[bolts](https://nl.aliexpress.com/item/32946954901.html) and nuts with 3D printed 
-standoffs between my PCB and the Pi.
-At the top of the Pi M2s run through the OLED holder.
+[nuts and bolts](https://nl.aliexpress.com/item/32946954901.html) 
+with 3D printed standoffs between my PCB and the Pi.
+At the top of the Pi the M2 screws run through the OLED holder 
+(so the stack is: nut, my pcb, standoff, Pi PCB, OLED holder, bolt head).
 
-The OLED is fixed with two M2 [bolts](https://nl.aliexpress.com/item/32946954901.html)
-to the OLED holder.
+The OLED is fixed with two M2 [nuts and bolts](https://nl.aliexpress.com/item/32946954901.html)
+to the OLED holder
 
 For assembly of the cases I use M2 
 [brass inserts](https://nl.aliexpress.com/item/1005009955547831.html) in 
@@ -402,11 +404,12 @@ I protected the OLED by inserting a
 rectangle in the top cover. There was no need to glue; the OLED presses it
 in the recess of the top cover.
 
-In total there are also four interior parts: OLED holder, reset switch extender, 
-standoffs (four, one for each corner of th Pi), and one small standoff for the 
-corner that is not covered by the OLED holder.
+Next to the four exterior 3D printed parts there are also four interior parts: 
+OLED holder, reset switch extender, standoffs (four, one for each corner of the Pi), 
+and one small standoff for the corner that is not covered by the OLED holder.
 
-I designed all 3D printed parts myself in [Fusion 360](https://www.autodesk.com/nl/products/fusion-360).
+I designed all 3D printed parts myself in 
+[Fusion 360](https://www.autodesk.com/nl/products/fusion-360).
 See directory [case](case) for details, STL files and gallery.
 
 
