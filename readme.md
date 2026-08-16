@@ -30,7 +30,7 @@ to access files on an SD card.
 >
 > _Example SD2IEC project from [PCBWAY](https://www.pcbway.com/project/shareproject/SD2iEC_COMMODORE_64_DISK_DRIVE_EMULATOR_POWERED_from_USER_PORT_MICRO_SD_VERSI_c56a9f83.html)_
 
-The SD2IEC is low-cost and capable to store about 25000 floppies
+The SD2IEC is low-cost and capable of storing about 25000 floppies
 (of 170 kByte each) on a 4GB SD card. It is small and can be powered 
 by the C64 itself (usually via the user port). 
 The big drawback is that while the SD2IEC is compatible
@@ -72,7 +72,7 @@ But most believe these down sides are well compensated by the extra compatibilit
 
 This section explains the key concepts when working with the Pi1541: 
 current working directory, three categories of commands, the new `CD` command, 
-mounting `.d64` as virtual floppy, the problem with the programming commands, 
+mounting a `.d64` file as virtual floppy, the problem with the programming commands, 
 and finally _browse mode_ and _emulation mode_.
 
 
@@ -122,8 +122,8 @@ of the rather obscure `←`. Next to `CD`, related advanced commands were
 added: `MD` to make a directory and `RD` to remove an (empty) directory.
 
 Of course the C64 doesn't know about the `CD` command, but you as operator 
-can issue them and the new directory feels like a new disk to the C64. 
-Typically the SD2IEC and the Pi1541 also come with a file browser `FB64`. 
+can issue it and the new directory feels like a new disk to the C64. 
+Typically the SD2IEC and the Pi1541 also come with a file browser (`FB64`) running on the C64. 
 This browser does know the `CD` command and allows easy navigation through 
 the file system on the SD card.
 
@@ -139,7 +139,7 @@ Windows treats `.zip` files. It is one _file_, but you can `CD`
 into it, and that "unzipped" `.d64` file is then the "mounted" _directory_. All 
 high level commands (`LOAD`) work on the mounted floppy, and so do all 
 advanced commands (`S0:MYGAME`). Even `OPEN 1,8,15,"CD:←":CLOSE 1` works;
-it unmounts the `.d64` virtual floppy and switches to its containing directory.
+it unmounts the `.d64` virtual floppy and switches to its parent directory.
 Of course `OPEN 1,8,15,"CD:SUBDIR":CLOSE 1` does not work in the mounted `.d64` because
 `.d64` files are supposed to be ripped 1541 disks, and the 1541 did not have a notion 
 of subdirectories.
@@ -165,8 +165,8 @@ an example from the manual (recall that `RTS` has opcode 0x60 or 96 decimal).
 > Example of programming commands from the 
 > [user manual](https://www.zimmers.net/anonftp/pub/cbm/manuals/drives/1541_Users_Guide.pdf)
 
-The above 1-byte "program" is written by the C64 in the memory of the 1541 drive 
-(to addres 0x0300), and then the C64 gives a command to call 0x0300. The 1541 
+The above 1-byte "program" is written by the C64 into the memory of the 1541 drive 
+(to address 0x0300), and then the C64 gives a command to execute from 0x0300. The 1541 
 starts executing there, finds opcode 96 (RTS), returns, and stops executing the 
 program. I made a more elaborate example 
 [blinky1541](https://github.com/maarten-pennings/C64howto/tree/main/blinky1541).
@@ -209,7 +209,7 @@ and it will happily wipe (format) the entire mounted `.d64` virtual floppy.
 
 > There is another, arguably more important, caveat to be aware of. 
 > Writes to a d64 image (e.g. `SAVE "PYPROG"`) in emulation mode are not 
-> written-through to SD card. All updates are in the Pi's RAM. 
+> written-through to the SD card. All updates are in the Pi's RAM. 
 > You _must unmount_ the virtual floppy (with `"CD:←"` or by pressing 
 > the ESC key on the Pi1541). Only then the new content is written to 
 > the FAT file system on the SD card.
@@ -221,7 +221,7 @@ Mostly for fun, I have made a couple of additions to Steve's firmware. The `CD:s
 goes one subdirectory down, and `CD:←` goes one up. For some reason the `CD://` did not 
 work. It is supposed to go to the root directory (yes with two slashes, something to 
 do with multiple volumes). I fixed it. Secondly, I was missing a `pwd` command (print 
-working directory). I added a `LOAD "$$"` command (I call it "sysinfo" that does that. 
+working directory). I added a `LOAD "$$"` command (I call it "sysinfo") that does that. 
 I added both features in 
 [v1.27](https://github.com/maarten-pennings/Pi1541#additions-in-this-fork).
 
@@ -241,7 +241,7 @@ It is also possible to change the current directory with a keyboard
 connected to the Raspberry Pi (via USB). 
 
 There is a third option. We can connect an OLED and five buttons 
-(Next, Prev, Select, Esc and Ins) to the Pi. 
+(Next, Prev, Select, Escape and Insert) to the Pi. 
 The OLED will also always show the current directory 
 (in sync with the HDMI screen), and the buttons also allow browsing 
 (just like the USB keyboard).
@@ -251,13 +251,13 @@ Three methods, always in sync.
 Oh, and in [v1.25](https://github.com/maarten-pennings/Pi1541#additions-in-this-fork)
 I added support for a bigger (1.54") OLED, making it easier to read from a distance.
 
-This table shows the functions of the five buttons. 
+The table below shows the functions of the five buttons. 
 When holding the INS key for a longer time, it acts as a shift key for the 
 other four. It changes the device number as shown in the "Drive" column.
 The swaplist is there to support large programs that use multiple floppies 
 that need to be swapped during the run-time of the program.
-Finally, note that ESC being unmount is a feature of my v1.27 firmware;
-originally SEL did the unmount.
+Finally, note that Escape key triggers an unmount is a feature of my v1.27 firmware;
+originally Select did the unmount.
 
 
 | Button | Description | Browse mode                  | Emulation mode       |Drive |
