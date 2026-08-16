@@ -2,7 +2,7 @@
 
 The PCB design files for my Pi1541.
 
-See the [main project page](https://github.com/maarten-pennings/pi1541device#hardware) 
+See the [main project page](https://github.com/maarten-pennings/pi1541device#my-design) 
 for high level design choices.
 
 
@@ -25,7 +25,7 @@ or as [front pdf](pi1541-pcb-front.pdf) or [back pdf](pi1541-pcb-back.pdf).
 
 ### Gerber
 
-The [gerber](pi1541_gerber.zip).
+The [gerber](pi1541_gerber.zip) file for [JLCPCB](https://jlcpcb.com/DMP).
 
 
 ## Renders

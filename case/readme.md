@@ -41,6 +41,7 @@ Here is an overview of the inside parts.
 ![inside parts](inside.jpg)
 
 - [OLED-holder stl file](OLED-holder.stl)  
+  The OLED holder has a flaw: the top lip collides with a PCB pin; I removed some material with a soldering iron.    
   ![OLED-holder](OLED-holder.png)
 
 - [button-extender stl file](button-extender.stl)  
@@ -49,8 +50,21 @@ Here is an overview of the inside parts.
 - [standoff11hx6x3 stl file](standoff11hx6x3.stl) (needed four times)  
   ![standoff11hx6x3](standoff11hx6x3.png)
 
-
 - [standoff4hx6x2.5 stl file](standoff4hx6x2.5.stl)  
   ![standoff4hx6x2](standoff4hx6x2.5.png)
+
+
+## Gallery
+
+![Front top view](../images/encased1.jpg)
+
+![Front view](../images/encased2.jpg)
+
+![SD card and foot](../images/encased3.jpg)
+
+![Back with connectors](../images/encased4.jpg)
+
+![Pi1541 with real 1541-II](../images/encased5.jpg)
+
 
 (end)
