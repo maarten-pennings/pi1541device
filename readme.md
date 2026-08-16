@@ -2,6 +2,8 @@
 
 My take on the _Pi1541_, the cycle exact Commodore 1541 disk drive emulator that runs on a Raspberry Pi.
 
+![My Pi1541 on top of an original](images/encased5.jpg)
+
 
 ## Introduction
 
