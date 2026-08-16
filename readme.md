@@ -250,10 +250,13 @@ Oh, and in [v1.25](https://github.com/maarten-pennings/Pi1541#additions-in-this-
 I added support for a bigger (1.54") OLED, making it easier to read from a distance.
 
 This table shows the functions of the five buttons. 
-The swaplist is there to support large programs that use multiple floppies 
-that need to be swapped during the run-time of the program.
 When holding the INS key for a longer time, it acts as a shift key for the 
 other four. It changes the device number as shown in the "Drive" column.
+The swaplist is there to support large programs that use multiple floppies 
+that need to be swapped during the run-time of the program.
+Finally, note that ESC being unmount is a feature of my v1.27 firmware;
+originally SEL did the unmount.
+
 
 | Button | Description | Browse mode                  | Emulation mode       |Drive |
 |:-------|:------------|:-----------------------------|:---------------------|:----:|
@@ -262,6 +265,24 @@ other four. It changes the device number as shown in the "Drive" column.
 | NXT    | Next        | Select next dir              | Next in swaplist     |   10 |
 | ESC    | Escape      | Change to parent dir         | Unmount              |   11 |
 | INS    | Insert      | Insert .d64 file in swaplist | -                    | shift|
+
+
+## SD card
+
+Preparing the SD card for the Raspberry Pi means merging files from different sources.
+
+There are three sources:
+
+- The GitHub repo from the Raspberry Pi foundation supplies the Pi's bootloader files.
+- The GitHub repo from Steve (or me) supplies the Pi1541 firmware and its config file (and a filebrowser)
+- Some internet site supplies the Commodore 1541-II firmware and the C64 font roms (used on the OLED), and maybe the game _Ghosts'n Goblins Arcade_ to test the hex inverter quality.
+
+![sdcard creation](sdcard/files.png)
+
+This repo includes a prepackaged [SD card image](sdcard/pi1541sdcard.zip).
+Alternatively, check the [sdcard](sdcard) subdirectory for a do-it-yourself 
+and some technical background details.
+
 
 
 ## My design
@@ -443,11 +464,9 @@ You find [sources](https://github.com/maarten-pennings/Pi1541/tree/master/src),
 even a [workflow](https://github.com/maarten-pennings/Pi1541/blob/master/.github/workflows/build-pi1541-firmware.yaml) for building the firmware in the GitHub cloud.
 
 
-## SD card
-
-
 ## Links
 
+- Prepackaged [SD card image](pi1541sdcard.zip).
 - The official [documentation](https://cbm-pi1541.firebaseapp.com/) by Steve White.
 - The GitHub [repo](https://github.com/pi1541/Pi1541) with the firmware from Steve White, 
   or my [fork](https://github.com/maarten-pennings/Pi1541).
@@ -457,5 +476,8 @@ even a [workflow](https://github.com/maarten-pennings/Pi1541/blob/master/.github
 - For commands (like `cd`) see the GitHub
   [repo](https://github.com/pi1541/Pi1541/blob/master/docs/IEC%20Commands.md) or
   the SD2IEC [user manual](https://c64os.com/post/sd2iecdocumentation) on C64OS.
+- Zimmers has [1541 roms](https://zimmers.net/anonftp/pub/cbm/firmware/drives/new/1541/index.html), [character roms](https://zimmers.net/anonftp/pub/cbm/firmware/characters/index.html)
+  or [demo disks](https://zimmers.net/anonftp/pub/cbm/demodisks/drives/index.html).
+
 
 (end)
