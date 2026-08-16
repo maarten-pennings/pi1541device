@@ -209,7 +209,7 @@ and it will happily wipe (format) the entire mounted `.d64` virtual floppy.
 > Writes to a d64 image (e.g. `SAVE "PYPROG"`) in emulation mode are not 
 > written-through to SD card. All updates are in the Pi's RAM. 
 > You _must unmount_ the virtual floppy (with `"CD:←"` or by pressing 
-> the ESC key on the Pi1514). Only then the new content is written to 
+> the ESC key on the Pi1541). Only then the new content is written to 
 > the FAT file system on the SD card.
 
 
@@ -377,7 +377,7 @@ and in the foot, the chamfered foot, and of course the front panel.
 I designed at about 60% scale: from 240×180×70 mm³ to 150×105×42 mm³.
 In total there are four exterior parts: top, bottom, foot and front.
 
-For assambly of the PCBs I 3D printed standoffs.
+For assembly of the PCBs I 3D printed standoffs.
 The Raspberry Pi is attached to my PCB using four M2 
 [nuts and bolts](https://nl.aliexpress.com/item/32946954901.html) 
 with 3D printed standoffs between my PCB and the Pi.
@@ -415,7 +415,35 @@ See directory [case](case) for details, STL files and gallery.
 
 ### Software
 
-See other [repo](https://github.com/maarten-pennings/Pi1541).
+The SD card in the Raspberry Pi hosts several files, one of them is the Pi1541 firmware.
+That is developed by Steve White, see his [GitHub repo](https://github.com/pi1541/Pi1541).
+
+I had one real problem: my big 1.54 OLED has a driver IC that was not fully compatible 
+with the ones that Steve's firmware already supported. I also 
+[found out](https://github.com/pi1541/Pi1541/issues/206#issuecomment-1162708867) 
+that my activity LED was not working due to a regression in the firmware 1.24.
+I [forked](https://github.com/maarten-pennings/Pi1541) Steve's repo and made 
+my own release 1.25 with these two fixes.
+
+I did make another small change. It did not feel natural to 
+me to leave emulation mode by pressing ENTER/SELECT, I changed that to ESCAPE.
+See release v1.26.
+
+Once I started playing with the advanced disk commands I missed two features.
+One was to CD to the root. The other one was a pwd command (print working directory).
+My release V1.27 adds support for `CD://`. The pwd command was implemented 
+by adding a virtual file "sysinfo". The command `LOAD "$$"` and then `LIST` shows
+some system information of the Pi1541.
+
+![sysinfo](images/sysinfo.jpg)
+
+See my other [repo](https://github.com/maarten-pennings/Pi1541) for the changes I made.
+You find [sources](https://github.com/maarten-pennings/Pi1541/tree/master/src), 
+[binary releases](https://github.com/maarten-pennings/Pi1541/releases) and 
+even a [workflow](https://github.com/maarten-pennings/Pi1541/blob/master/.github/workflows/build-pi1541-firmware.yaml) for building the firmware in the GitHub cloud.
+
+
+## SD card
 
 
 ## Links
