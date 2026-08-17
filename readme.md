@@ -208,7 +208,7 @@ If you give the same command in emulation mode, the original 1541 firmware kicks
 and it will happily wipe (format) the entire mounted `.d64` virtual floppy.
 
 > There is another, arguably more important, caveat to be aware of. 
-> Writes to a d64 image (e.g. `SAVE "PYPROG"`) in emulation mode are not 
+> Writes to a .d64 image (e.g. `SAVE "MYPROG"`) in emulation mode are not 
 > written-through to the SD card. All updates are in the Pi's RAM. 
 > You _must unmount_ the virtual floppy (with `"CD:←"` or by pressing 
 > the ESC key on the Pi1541). Only then the new content is written to 
@@ -252,11 +252,11 @@ Oh, and in [v1.25](https://github.com/maarten-pennings/Pi1541#additions-in-this-
 I added support for a bigger (1.54") OLED, making it easier to read from a distance.
 
 The table below shows the functions of the five buttons. 
-When holding the INS key for a longer time, it acts as a shift key for the 
+When holding the Insert key for a longer time, it acts as a shift key for the 
 other four. It changes the device number as shown in the "Drive" column.
 The swaplist is there to support large programs that use multiple floppies 
 that need to be swapped during the run-time of the program.
-Finally, note that Escape key triggers an unmount is a feature of my v1.27 firmware;
+Finally, note that the Escape key triggering an unmount is a feature of my v1.27 firmware;
 originally Select did the unmount.
 
 
