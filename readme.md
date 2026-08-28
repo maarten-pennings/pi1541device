@@ -285,6 +285,13 @@ This repo includes a prepackaged [SD card image](sdcard/pi1541sdcard.zip).
 Alternatively, check the [sdcard](sdcard) subdirectory for a do-it-yourself 
 and some technical background details.
 
+Note that a `.prg` file in a sub directory (not inside a `.d64`) 
+will typically be loaded with a `LOAD` command passing the _filename_ as 
+used on the SD card. It is advised to restrict the filename to
+characters available on the C64, e.g. no `_`, but also no _capitals_.
+Personally, I also leave out the `.prg` extension; 
+`LOAD "HELLO",8` feels more C64 like than `LOAD "HELLO.PRG",8`.
+Similar considerations (uppercase, underscores) apply to naming subdirectories.
 
 
 ## My design
