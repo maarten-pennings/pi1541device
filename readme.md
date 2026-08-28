@@ -162,8 +162,8 @@ an example from the manual (recall that `RTS` has opcode 0x60 or 96 decimal).
 
 > ![memory execute example](images/m-e-command.png)
 >
-> Example of programming commands from the 
-> [user manual](https://www.zimmers.net/anonftp/pub/cbm/manuals/drives/1541_Users_Guide.pdf)
+> _Example of programming commands from the 
+> [user manual](https://www.zimmers.net/anonftp/pub/cbm/manuals/drives/1541_Users_Guide.pdf)_
 
 The above 1-byte "program" is written by the C64 into the memory of the 1541 drive 
 (to address 0x0300), and then the C64 gives a command to execute from 0x0300. The 1541 
@@ -279,7 +279,8 @@ There are three sources:
 - The GitHub repo from Steve (or me) supplies the Pi1541 firmware and its config file (and a filebrowser)
 - Some internet site supplies the Commodore 1541-II firmware and the C64 font roms (used on the OLED), and maybe the game _Ghosts'n Goblins Arcade_ to test the hex inverter quality.
 
-![sdcard creation](sdcard/files.png)
+> ![sdcard creation](sdcard/files.png)
+> _The three sources of files to be combined into the SD card image._
 
 This repo includes a prepackaged [SD card image](sdcard/pi1541sdcard.zip).
 Alternatively, check the [sdcard](sdcard) subdirectory for a do-it-yourself 
@@ -300,13 +301,13 @@ I wanted a Pi1541 for my C64.
 My goal was to make a device that resembles a real drive.
 
 I wanted it fully featured: local keys and display, two IEC connectors 
-(daisy chainable IEC like the real drives), access to SD card, reset button, 
-power and activity LED, drive sound emulation, an LED to show data line status, 
-access to HDMI out. 
+(daisy chainable IEC like the real drives), physical access to the SD card, a reset button, 
+power and activity LED, an LED to show data line status, drive sound emulation,
+access for USB power and access to HDMI out. 
 
 I wanted it easy to operate: 
 big buttons ([Cherry keys](https://nl.aliexpress.com/item/1005012280948086.html)), 
-big display. I wanted it to roughly have the same aspect ratios as the original 
+big display (biggest OLED). I wanted the replica to roughly have the same aspect ratios as the original 
 drive (the 1541-II is 240×180×70 mm³). This posed a problem for the Cherry keys; 
 they are relatively tall, so they need to be mounted on the "floor" PCB,
 the PCB that I had to design. 
@@ -319,7 +320,8 @@ so that needed to be above the Pi.
 
 This is a sketch of how I envisioned the topology.
 
-![Pi1541 concept sketch](images/pcbconcept.jpg)
+> ![Pi1541 concept sketch](images/pcbconcept.jpg)
+> _Sketching the placement of the key components_
 
 From front to back we find:
 
@@ -335,12 +337,13 @@ From front to back we find:
   which not only converts to the newer USB-C, it also happens to bring the USB connector 
   more to the back.
 
-  ![USB extender](images/usbextender.jpg)
+> ![USB extender](images/usbextender.jpg)
+> _USB-C to micro USB converter_
 
 
 ### Hardware
 
-The simplest solution Steve White offers is a Raspberry Pi and a level shifter
+The simplest schematics Steve White offers is a Raspberry Pi and a level shifter
 ("Option A"). I based my design on [Option B](https://cbm-pi1541.firebaseapp.com/#:~:text=are%20all%20optional.-,Option%20B,-This%20option%20uses) of Steve.
 This is for devices with two IECs. The Pi is not capable of sourcing enough current
 for the second "outgoing" IEC bus, so a tri-state hex inverter IC (7406) 
@@ -355,7 +358,8 @@ The IEC wiring is different between Option A and B.
 The local buttons, activity LED and buzzer are shown in Steve's schematics, but not the OLED.
 I started with a breadboard.
 
-![Breadboard](images/breadboard.jpg)
+> ![Breadboard](images/breadboard.jpg)
+> _Option B prototype on a breadboard_
 
 > The latest firmware (1.24) of Steve has a regression: the Activity LED is not working.
 > I fixed that in my [fork](https://github.com/maarten-pennings/Pi1541).
@@ -387,12 +391,14 @@ We see it flicker when data is transmitted.
 I ordered my PCBs at [JLCPCB](https://jlcpcb.com/DMP); 5 PCBs for €10.44 including 
 shipping, arrived in 10 days.
 
-![PCB front and back](images/pcb0.jpg)
+> ![PCB front and back](images/pcb0.jpg)
+> _Bare PCB (front and back)_
 
 A photo of the assembled PCB, including some 3D printed parts like the OLED holder
 and standoffs.
 
-![Assembled PCB](images/pcb1.jpg)
+> ![Assembled PCB](images/pcb1.jpg)
+> _Assembled PCB_
 
 For a more extensive gallery and the design files itself, see directory [PCB](pcb).
 
@@ -424,7 +430,8 @@ the front panel (2 pieces) and in the top cover (5 pieces); with matching M2
 of different length. The foot is screwed to the bottom part with three M3 bolts and nuts.
 I glued rubber feet at the bottom.
 
-![Screws at the bottom side](images/screws.jpg)
+> ![Screws at the bottom side](images/screws.jpg)
+> _Casing shown from bottom side (screws, rubber feet)_
 
 One laborious task is to solder wires to each of the three LEDs, solder them
 to the LED pads on the PCB, and mount the LEDs in the front panel.
@@ -465,7 +472,8 @@ My release V1.27 adds support for `CD://`. The pwd command was implemented
 by adding a virtual file "sysinfo". The command `LOAD "$$"` and then `LIST` shows
 some system information of the Pi1541.
 
-![sysinfo](images/sysinfo.jpg)
+> ![sysinfo](images/sysinfo.jpg)
+> _The sysinfo command in action_
 
 See my other [repo](https://github.com/maarten-pennings/Pi1541) for the changes I made.
 You find [sources](https://github.com/maarten-pennings/Pi1541/tree/master/src), 
