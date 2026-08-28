@@ -361,9 +361,6 @@ I started with a breadboard.
 > ![Breadboard](images/breadboard.jpg)
 > _Option B prototype on a breadboard_
 
-> The latest firmware (1.24) of Steve has a regression: the Activity LED is not working.
-> I fixed that in my [fork](https://github.com/maarten-pennings/Pi1541).
-
 I used the biggest 128×64 OLED module I had in stock.
 It is [1.54 inch](https://nl.aliexpress.com/item/1005006579037427.html), not the more
 common 1.3" neither the even smaller 0.96".
@@ -385,6 +382,10 @@ I believe it is basically a buzz when the drive head moves a track.
 
 I added a red LED for power and green for the activity LED.
 This is the color scheme used in the 1541-II. The original 1541 had the colors swapped.
+
+> The latest firmware (1.24) of Steve has a regression: the Activity LED is not working.
+> I fixed that in my [fork](https://github.com/maarten-pennings/Pi1541).
+
 My final addition was a blue LED that is on the IEC _data_ line.
 We see it flicker when data is transmitted.
 
@@ -444,6 +445,9 @@ in the recess of the top cover.
 Next to the four exterior 3D printed parts there are also four interior parts: 
 OLED holder, reset switch extender, standoffs (four, one for each corner of the Pi), 
 and one small standoff for the corner that is not covered by the OLED holder.
+
+> ![Fully encased](images/encased1.jpg)
+> _My Pi1541 fully encased_
 
 I designed all 3D printed parts myself in 
 [Fusion 360](https://www.autodesk.com/nl/products/fusion-360).
