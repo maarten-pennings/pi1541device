@@ -2,7 +2,8 @@
 
 My take on the _Pi1541_, the cycle exact Commodore 1541 disk drive emulator that runs on a Raspberry Pi.
 
-![My Pi1541 on top of an original](images/encased5.jpg)
+> ![My Pi1541 on top of an original](images/encased5.jpg)
+> _My Commodore 1541-II disk drive (bottom) with my Pi1541 replica on top._
 
 
 ## Introduction
@@ -78,14 +79,13 @@ and finally _browse mode_ and _emulation mode_.
 
 ### Current working directory
 
-The Pi1541 contains a SD card, and it maintains a notion of the 
+The Pi1541 contains an SD card, and it maintains a notion of the 
 _current working directory_ on that SD card. Its firmware bridges the 
 commands that come from the C64 (over the IEC bus) to the FAT file system 
 on the SD card. 
 
-It does understand the _high level command_ such as 
-`SAVE "MYGAME"`, `LOAD "MYGAME"`, and even `LOAD "$"` to read the 
-(current working) directory. The `SAVE "MYGAME"` creates a file `MYGAME` 
+It does understand the _high level commands_ such as 
+`SAVE "MYGAME"`, `LOAD "MYGAME"`, or `LOAD "$"`. The `SAVE "MYGAME"` creates a file `MYGAME` 
 on the SD card, in the current working directory. Similarly `LOAD "MYGAME"` 
 reads the file `MYGAME` from the current working directory and sends it back 
 to the C64 over the IEC bus. It will be no surprise that `LOAD "$"` reads 
@@ -148,8 +148,8 @@ of subdirectories.
 ### Programming commands 
 
 We should realize that the firmware (of SD2IEC and Pi1541) sees the high 
-level and advanced commands come in via the IEC bus. They need to parse and 
-understand them, and then execute them. That is the task for the software written 
+level and advanced commands come in via the IEC bus. It needs to parse and 
+understand the commands, and then execute them. That is the task for the software written 
 by the programmers of those two devices. That is development work.
 
 Unfortunately, next to the high level and advanced commands there is a third 
@@ -170,7 +170,7 @@ The above 1-byte "program" is written by the C64 into the memory of the 1541 dri
 starts executing there, finds opcode 96 (RTS), returns, and stops executing the 
 program. I made a more elaborate example 
 [blinky1541](https://github.com/maarten-pennings/C64howto/tree/main/blinky1541).
-Anyhow, this 1541 feature is the essence of how fast loaders work.
+Anyhow, these programming commands of the 1541 are the mechanism used by fast loaders.
 
 
 ### Browse mode versus emulation mode
@@ -185,7 +185,7 @@ supports both. When the Pi1541 starts, it is in browse mode. In browse mode, the
 firmware from Steve runs. This firmware implements the high level and advanced 
 commands _including the `CD` command_. This allows all existing tools to 
 browse all files on the SD card. As soon as a command comes in that `CD`s into 
-a virtual floppy disk (I called this "mounting the floppy" above), the Pi1541 
+a virtual floppy disk (a `.d64` file) - I called this "mounting the floppy" above - the Pi1541 
 switches to emulation mode. In emulation mode the Raspberry Pi _emulates the 1541_.
 
 The emulation is serious. A real 1541 contains a 6502,
@@ -241,7 +241,7 @@ It is also possible to change the current directory with a keyboard
 connected to the Raspberry Pi (via USB). 
 
 There is a third option. We can connect an OLED and five buttons 
-(Next, Prev, Select, Escape and Insert) to the Pi. 
+(Next, Previous, Select, Escape and Insert) to the Pi. 
 The OLED will also always show the current directory 
 (in sync with the HDMI screen), and the buttons also allow browsing 
 (just like the USB keyboard).
