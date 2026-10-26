@@ -5,6 +5,8 @@ My take on the _Pi1541_, the cycle exact Commodore 1541 disk drive emulator that
 > ![My Pi1541 on top of an original](images/encased5.jpg)
 > _My Commodore 1541-II disk drive (bottom) with my Pi1541 replica on top._
 
+There is an introduction in [Dutch](pi1541-nl.md).
+
 
 ## Introduction
 
